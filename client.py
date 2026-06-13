@@ -9,7 +9,7 @@ PORT = 5555
 
 # Inisialisasi Pygame
 pygame.init()
-SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
+SCREEN_WIDTH, SCREEN_HEIGHT = 800, 500
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Tebak Kata - Multiplayer Lobby")
 font = pygame.font.SysFont("Arial", 20)
@@ -22,16 +22,24 @@ koneksi_aktif = True
 
 def terima_pesan(client_socket):
     """Thread untuk menerima data dari server"""
-    global koneksi_aktif
+    global koneksi_aktif, log_pesan
     while koneksi_aktif:
         try:
             pesan = client_socket.recv(1024).decode('utf-8')
             if not pesan:
+                print("[INFO] Server memutuskan koneksi secara sengaja.")
                 break
-            # Simpan 10 pesan terakhir untuk ditampilkan di UI
-            log_pesan.append(pesan.strip())
-            if len(log_pesan) > 12:
-                log_pesan.pop(0)
+            
+            # Pecah pesan jika mengandung \n
+            baris_pesan = pesan.split('\n')
+            for baris in baris_pesan:
+                if baris.strip() or baris == "": 
+                    log_pesan.append(baris)
+            
+            # MODIFIKASI: Ditingkatkan kapasitasnya menjadi 18 baris karena layar sekarang lebih tinggi (500px)
+            if len(log_pesan) > 18:
+                log_pesan = log_pesan[-18:]
+                
         except:
             break
     koneksi_aktif = False
@@ -44,12 +52,19 @@ def draw_ui():
     for pesan in log_pesan:
         text_surface = font.render(pesan, True, (200, 200, 200))
         screen.blit(text_surface, (20, y_offset))
-        y_offset += 25
+        y_offset += 22 # Jarak antar baris baru (line spacing)
 
-    # Render Input Box
-    pygame.draw.rect(screen, (50, 50, 50), (20, 340, 560, 40))
+    # === PERBAIKAN UTAMA: KOORDINAT DINAMIS BERDASARKAN SCREEN_HEIGHT ===
+    # Membuat tinggi kotak input adaptif di posisi bawah layar (Y = 440)
+    input_box_y = SCREEN_HEIGHT - 60
+    
+    # Gambar background kotak input agar teks chat di belakangnya tertutup rapi
+    pygame.draw.rect(screen, (30, 30, 30), (0, input_box_y - 10, SCREEN_WIDTH, 70))
+    
+    # Kotak Input Fisik
+    pygame.draw.rect(screen, (50, 50, 50), (20, input_box_y, SCREEN_WIDTH - 40, 40))
     input_surface = font.render(f"Input: {input_teks}", True, (255, 255, 255))
-    screen.blit(input_surface, (30, 350))
+    screen.blit(input_surface, (30, input_box_y + 10))
     
     pygame.display.flip()
 
@@ -61,7 +76,7 @@ def main():
     try:
         client.connect((HOST, PORT))
     except:
-        print("Gagal terhubung ke server.")
+        print("[ERROR] Gagal terhubung ke server. Pastikan Server sudah dinyalakan!")
         return
 
     # Threading untuk receiver
@@ -79,16 +94,20 @@ def main():
                 if event.key == pygame.K_RETURN:
                     # Kirim pesan ke server saat Enter ditekan
                     if input_teks.strip():
-                        client.send(input_teks.encode('utf-8'))
+                        try:
+                            client.send(input_teks.encode('utf-8'))
+                        except:
+                            print("[ERROR] Gagal mengirim data, koneksi terputus.")
                         input_teks = ""
                 elif event.key == pygame.K_BACKSPACE:
                     input_teks = input_teks[:-1]
                 else:
-                    # Menangani input karakter
-                    input_teks += event.unicode
+                    # Menangani input karakter (Membatasi panjang ketikan agar tidak meluap keluar kotak)
+                    if len(input_teks) < 70:
+                        input_teks += event.unicode
 
         draw_ui()
-        clock.tick(30) # Limit 30 FPS agar CPU tidak bekerja terlalu keras
+        clock.tick(30) # Limit 30 FPS
 
     koneksi_aktif = False
     client.close()
