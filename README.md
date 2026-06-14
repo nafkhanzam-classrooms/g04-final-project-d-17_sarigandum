@@ -1,7 +1,7 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/4SHtB1vz)
 
 
-# 🎮 BlindGuesser: Party Game Menebak Kata
+# BlindGuesser: Party Game Menebak Kata
 
 **BlindGuesser** is a real-time, multiplayer party game built with Python where players rely on deduction, communication, and custom social rules to guess a secret word. 
 
@@ -9,7 +9,7 @@ In this game, the server acts as the Game Master. It randomly assigns one player
 
 ---
 
-## ✨ Features
+## Features
 
 * **Real-Time Multiplayer Chat:** Built entirely on TCP sockets for instant messaging and guessing.
 * **Graphical User Interface:** A lightweight, interactive UI built with `pygame`.
@@ -19,7 +19,7 @@ In this game, the server acts as the Game Master. It randomly assigns one player
 
 ---
 
-## 🛠️ Requirements & Setup
+## Requirements & Setup
 
 Before running the game, ensure you have Python 3.x installed on your machine. You will also need to install the required GUI library.
 
@@ -40,7 +40,7 @@ PORT = 5555
 
 ---
 
-## 🚀 How to Play
+## How to Play
 
 To start the game, you must run the server first, followed by multiple client instances.
 
