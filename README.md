@@ -92,7 +92,6 @@ This script handles what the player sees and interacts with. It separates networ
 * `ping_loop`: A daemon thread that sends a timestamped `__PING__` to the server every 2 seconds to calculate real-time latency.
 * `attempt_reconnect`: A fallback thread that attempts to re-establish a dropped connection automatically.
 
-
 * **Pygame UI (`draw_login_ui` & `draw_lobby_ui`):** A 30 FPS rendering loop that displays the login box, the live chat history, player connection status, and ping.
 * **Input Handling (`main`):** Captures keyboard inputs seamlessly and sends them directly to the server via the `kirim_pesan` function. Includes manual reconnect commands (`/RECONNECT`) if needed.
 ```
