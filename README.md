@@ -7,7 +7,7 @@
 
 In this game, the server acts as the Game Master. It randomly assigns one player as the **[PENEBAK]** (Guesser) and the rest as **[PENJAWAB]** (Answerers). The Guesser must figure out the secret word by asking questions in the global chat, while the Answerers guide them. Players are encouraged to create their own custom rules socially (e.g., limiting the number of questions, setting a timer, or strictly answering with "Yes/No").[
 
-LINK DEMO YOUTUBE](https://youtu.be/z4ET_LJ--ZA)
+[LINK DEMO YOUTUBE](https://youtu.be/z4ET_LJ--ZA)
 
 ---
 
